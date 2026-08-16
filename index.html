@@ -3,17 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Nexa AI</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
-  background:#0b1020;
-  color:white;
-  font-family:Arial,sans-serif;
   height:100vh;
+  background:#0b1020;
+  color:#fff;
+  font-family:Arial, sans-serif;
 }
 
 .app{
@@ -25,41 +28,52 @@ body{
   background:#111827;
 }
 
+/* HEADER */
+
 .header{
-  padding:18px 20px;
-  border-bottom:1px solid #263244;
+  height:70px;
+  padding:0 20px;
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid #263244;
 }
 
 .logo{
   font-size:24px;
-  font-weight:700;
+  font-weight:bold;
+}
+
+.logo span{
+  color:#60a5fa;
 }
 
 .status{
-  font-size:13px;
   color:#6ee7b7;
+  font-size:13px;
 }
+
+/* CHAT */
 
 .chat{
   flex:1;
-  overflow:auto;
-  padding:22px;
+  overflow-y:auto;
+  padding:25px 20px;
 }
 
 .msg{
   max-width:82%;
-  padding:13px 16px;
-  margin-bottom:14px;
-  border-radius:16px;
+  padding:14px 17px;
+  margin-bottom:15px;
+  border-radius:17px;
   line-height:1.5;
   white-space:pre-wrap;
+  word-wrap:break-word;
 }
 
 .ai{
   background:#1f2937;
+  margin-right:auto;
 }
 
 .user{
@@ -67,37 +81,71 @@ body{
   margin-left:auto;
 }
 
-.input{
+/* INPUT */
+
+.input-area{
+  padding:15px;
+  border-top:1px solid #263244;
   display:flex;
   gap:10px;
-  padding:14px;
-  border-top:1px solid #263244;
+  background:#111827;
 }
 
 textarea{
   flex:1;
   height:52px;
   resize:none;
+  padding:15px;
+  border-radius:14px;
+  border:1px solid #374151;
   background:#0b1220;
   color:white;
-  border:1px solid #374151;
-  border-radius:13px;
-  padding:14px;
   outline:none;
+  font-size:15px;
+}
+
+textarea:focus{
+  border-color:#2563eb;
 }
 
 button{
-  width:82px;
-  border:0;
-  border-radius:13px;
+  width:85px;
+  border:none;
+  border-radius:14px;
   background:#2563eb;
   color:white;
   font-weight:bold;
+  cursor:pointer;
 }
 
+button:hover{
+  background:#1d4ed8;
+}
+
+button:disabled{
+  background:#374151;
+  cursor:not-allowed;
+}
+
+/* MOBILE */
+
 @media(max-width:600px){
-  .msg{max-width:90%}
-  .logo{font-size:21px}
+
+  .logo{
+    font-size:21px;
+  }
+
+  .msg{
+    max-width:90%;
+  }
+
+  .input-area{
+    padding:10px;
+  }
+
+  button{
+    width:70px;
+  }
 }
 </style>
 </head>
@@ -106,83 +154,185 @@ button{
 
 <div class="app">
 
+  <!-- HEADER -->
+
   <div class="header">
-    <div class="logo">✦ Nexa AI</div>
-    <div class="status">● Online</div>
+
+    <div class="logo">
+      ✦ <span>Nexa</span> AI
+    </div>
+
+    <div class="status">
+      ● Online
+    </div>
+
   </div>
+
+
+  <!-- CHAT -->
 
   <div class="chat" id="chat">
 
     <div class="msg ai">
 Hello! I'm Nexa AI. 👋
 
-How can I help you?
+How can I help you today?
     </div>
 
   </div>
 
-  <div class="input">
+
+  <!-- INPUT -->
+
+  <div class="input-area">
 
     <textarea
       id="q"
       placeholder="Message Nexa AI..."
-      onkeydown="key(event)">
-    </textarea>
+      onkeydown="handleKey(event)"
+    ></textarea>
 
-    <button onclick="send()">Send</button>
+    <button
+      id="sendButton"
+      onclick="sendMessage()"
+    >
+      Send
+    </button>
 
   </div>
 
 </div>
 
+
 <script>
 
-function add(text,who){
+/* ADD MESSAGE */
 
-  const d=document.createElement("div");
+function addMessage(text, type){
 
-  d.className="msg "+who;
+  const chat = document.getElementById("chat");
 
-  d.textContent=text;
+  const message = document.createElement("div");
 
-  document.getElementById("chat").appendChild(d);
+  message.className = "msg " + type;
 
-  d.scrollIntoView({
-    behavior:"smooth"
-  });
+  message.textContent = text;
+
+  chat.appendChild(message);
+
+  chat.scrollTop = chat.scrollHeight;
+
+  return message;
 }
 
 
-function send(){
+/* SEND MESSAGE */
 
-  const q=document.getElementById("q");
+async function sendMessage(){
 
-  const text=q.value.trim();
+  const input = document.getElementById("q");
 
-  if(!text)return;
+  const button = document.getElementById("sendButton");
 
-  add(text,"user");
+  const text = input.value.trim();
 
-  q.value="";
+  if(!text){
+    return;
+  }
 
-  setTimeout(function(){
 
-    add(
-      "I'm Nexa AI. My AI brain is not connected yet. 🤖",
+  /* USER MESSAGE */
+
+  addMessage(text, "user");
+
+  input.value = "";
+
+  button.disabled = true;
+
+  button.textContent = "...";
+
+
+  /* THINKING MESSAGE */
+
+  const thinking = addMessage(
+    "Nexa AI is thinking... 🤔",
+    "ai"
+  );
+
+
+  try{
+
+    const response = await fetch("/api/chat", {
+
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify({
+        message:text
+      })
+
+    });
+
+
+    const data = await response.json();
+
+
+    /* REMOVE THINKING */
+
+    thinking.remove();
+
+
+    /* AI RESPONSE */
+
+    if(data.reply){
+
+      addMessage(data.reply, "ai");
+
+    }else{
+
+      addMessage(
+        "Sorry, I couldn't get a response. 😕",
+        "ai"
+      );
+
+    }
+
+
+  }catch(error){
+
+    thinking.remove();
+
+    addMessage(
+      "Connection error. Please try again. ❌",
       "ai"
     );
 
-  },600);
+    console.error(error);
+
+  }
+
+
+  button.disabled = false;
+
+  button.textContent = "Send";
 }
 
 
-function key(e){
+/* ENTER KEY */
 
-  if(e.key==="Enter" && !e.shiftKey){
+function handleKey(event){
 
-    e.preventDefault();
+  if(
+    event.key === "Enter" &&
+    !event.shiftKey
+  ){
 
-    send();
+    event.preventDefault();
+
+    sendMessage();
 
   }
 
