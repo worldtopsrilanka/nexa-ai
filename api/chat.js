@@ -23,15 +23,13 @@ export default async function handler(req, res) {
     }
 
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1/interactions",
+      "https://generativelanguage.googleapis.com/v1beta/interactions",
       {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
           "x-goog-api-key": apiKey
         },
-
         body: JSON.stringify({
           model: "gemini-3.6-flash",
           input: message
@@ -43,17 +41,23 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       return res.status(response.status).json({
-        error: data?.error?.message || "Gemini API error"
+        error: data?.error?.message || "Gemini API error",
+        debug: data
       });
     }
 
     const reply =
       data?.output_text ||
-      data?.outputs?.find(x => x.type === "text")?.text;
+      data?.steps
+        ?.flatMap(step => step?.content || [])
+        ?.filter(item => item?.type === "text")
+        ?.map(item => item.text)
+        ?.join("\n");
 
     if (!reply) {
       return res.status(500).json({
-        error: "Gemini returned an empty response"
+        error: "Gemini returned no text",
+        debug: data
       });
     }
 
