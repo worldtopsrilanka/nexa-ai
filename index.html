@@ -289,18 +289,16 @@ async function sendMessage(){
 
     if(data.reply){
 
-      addMessage(data.reply, "ai");
+  addMessage(data.reply, "ai");
 
-    }else{
+}else{
 
-      addMessage(
-        "Sorry, I couldn't get a response. 😕",
-        "ai"
-      );
+  addMessage(
+    "Error: " + (data.error || "Unknown error"),
+    "ai"
+  );
 
     }
-
-
   }catch(error){
 
     thinking.remove();
