@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+
+    <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Nexa AI</title>
+<title>Avenqor AI</title>
 
 <style>
 *{
@@ -28,8 +29,6 @@ body{
   background:#111827;
 }
 
-/* HEADER */
-
 .header{
   height:70px;
   padding:0 20px;
@@ -52,8 +51,6 @@ body{
   color:#6ee7b7;
   font-size:13px;
 }
-
-/* CHAT */
 
 .chat{
   flex:1;
@@ -80,8 +77,6 @@ body{
   background:#2563eb;
   margin-left:auto;
 }
-
-/* INPUT */
 
 .input-area{
   padding:15px;
@@ -127,8 +122,6 @@ button:disabled{
   cursor:not-allowed;
 }
 
-/* MOBILE */
-
 @media(max-width:600px){
 
   .logo{
@@ -154,12 +147,10 @@ button:disabled{
 
 <div class="app">
 
-  <!-- HEADER -->
-
   <div class="header">
 
     <div class="logo">
-      ✦ <span>Nexa</span> AI
+      ✦ <span>Avenqor</span> AI
     </div>
 
     <div class="status">
@@ -168,27 +159,21 @@ button:disabled{
 
   </div>
 
-
-  <!-- CHAT -->
-
   <div class="chat" id="chat">
 
     <div class="msg ai">
-Hello! I'm Nexa AI. 👋
+Hello! I'm Avenqor AI. 👋
 
 How can I help you today?
     </div>
 
   </div>
 
-
-  <!-- INPUT -->
-
   <div class="input-area">
 
     <textarea
       id="q"
-      placeholder="Message Nexa AI..."
+      placeholder="Message Avenqor AI..."
       onkeydown="handleKey(event)"
     ></textarea>
 
@@ -203,10 +188,7 @@ How can I help you today?
 
 </div>
 
-
 <script>
-
-/* ADD MESSAGE */
 
 function addMessage(text, type){
 
@@ -226,8 +208,6 @@ function addMessage(text, type){
 }
 
 
-/* SEND MESSAGE */
-
 async function sendMessage(){
 
   const input = document.getElementById("q");
@@ -240,9 +220,6 @@ async function sendMessage(){
     return;
   }
 
-
-  /* USER MESSAGE */
-
   addMessage(text, "user");
 
   input.value = "";
@@ -251,14 +228,10 @@ async function sendMessage(){
 
   button.textContent = "...";
 
-
-  /* THINKING MESSAGE */
-
   const thinking = addMessage(
-    "Nexa AI is thinking... 🤔",
+    "Avenqor AI is thinking... 🤔",
     "ai"
   );
-
 
   try{
 
@@ -276,29 +249,23 @@ async function sendMessage(){
 
     });
 
-
     const data = await response.json();
-
-
-    /* REMOVE THINKING */
 
     thinking.remove();
 
-
-    /* AI RESPONSE */
-
     if(data.reply){
 
-  addMessage(data.reply, "ai");
+      addMessage(data.reply, "ai");
 
-}else{
+    }else{
 
-  addMessage(
-    "Error: " + (data.error || "Unknown error"),
-    "ai"
-  );
+      addMessage(
+        "Error: " + (data.error || "Unknown error"),
+        "ai"
+      );
 
     }
+
   }catch(error){
 
     thinking.remove();
@@ -312,14 +279,11 @@ async function sendMessage(){
 
   }
 
-
   button.disabled = false;
 
   button.textContent = "Send";
 }
 
-
-/* ENTER KEY */
 
 function handleKey(event){
 
