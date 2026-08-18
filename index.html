@@ -3,88 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Avenqor AI</title>
 
 <style>
-*{
-  box-sizing:border-box;
-}
-
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  font-family:Arial,Helvetica,sans-serif;
-  background:#0b1020;
-  color:#fff;
-}
+*{box-sizing:border-box}
 
 body{
-  overflow:hidden;
+  margin:0;
+  height:100vh;
+  background:#0b1020;
+  color:white;
+  font-family:Arial,sans-serif;
 }
 
 .app{
-  width:100%;
   height:100vh;
   display:flex;
-  background:#111827;
 }
-
-/* SIDEBAR */
 
 .sidebar{
   width:260px;
-  background:#0b1220;
+  background:#0a1120;
   border-right:1px solid #263244;
+  padding:15px;
   display:flex;
   flex-direction:column;
-  padding:15px;
 }
 
-.brand{
-  font-size:23px;
+.logo{
+  font-size:24px;
   font-weight:bold;
-  padding:10px 8px 20px;
+  padding:10px;
 }
 
-.brand span{
+.logo span{
   color:#60a5fa;
 }
 
 .new-chat{
-  width:100%;
-  padding:13px;
+  padding:12px;
   border:1px solid #334155;
   border-radius:12px;
   background:#172033;
   color:white;
   cursor:pointer;
-  font-weight:bold;
-  margin-bottom:15px;
-}
-
-.new-chat:hover{
-  background:#1e293b;
-}
-
-.history-title{
-  color:#94a3b8;
-  font-size:12px;
-  padding:8px;
+  margin:10px 0 15px;
 }
 
 .history{
-  flex:1;
   overflow-y:auto;
 }
 
 .history-item{
-  padding:11px;
+  padding:10px;
   border-radius:10px;
-  color:#dbeafe;
   cursor:pointer;
-  font-size:14px;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
@@ -94,8 +67,6 @@ body{
   background:#172033;
 }
 
-/* MAIN */
-
 .main{
   flex:1;
   min-width:0;
@@ -103,33 +74,21 @@ body{
   flex-direction:column;
 }
 
-/* HEADER */
-
 .header{
-  height:70px;
+  height:65px;
+  padding:0 18px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:0 20px;
   border-bottom:1px solid #263244;
 }
 
-.mobile-menu{
+.menu{
   display:none;
-  border:none;
   background:none;
+  border:0;
   color:white;
   font-size:22px;
-  cursor:pointer;
-}
-
-.title{
-  font-size:20px;
-  font-weight:bold;
-}
-
-.title span{
-  color:#60a5fa;
 }
 
 .status{
@@ -137,62 +96,11 @@ body{
   font-size:13px;
 }
 
-/* CHAT */
-
 .chat{
   flex:1;
   overflow-y:auto;
-  padding:30px 20px;
+  padding:25px 18px;
 }
-
-.message-row{
-  display:flex;
-  margin-bottom:18px;
-}
-
-.message-row.user{
-  justify-content:flex-end;
-}
-
-.message{
-  max-width:78%;
-  padding:14px 17px;
-  border-radius:18px;
-  line-height:1.55;
-  white-space:pre-wrap;
-  word-break:break-word;
-}
-
-.message.ai{
-  background:#1f2937;
-}
-
-.message.user{
-  background:#2563eb;
-}
-
-.actions{
-  display:flex;
-  gap:6px;
-  margin-top:7px;
-}
-
-.action-btn{
-  border:0;
-  background:#172033;
-  color:#94a3b8;
-  padding:5px 8px;
-  border-radius:7px;
-  cursor:pointer;
-  font-size:12px;
-}
-
-.action-btn:hover{
-  color:white;
-  background:#263244;
-}
-
-/* WELCOME */
 
 .welcome{
   max-width:700px;
@@ -202,10 +110,9 @@ body{
 
 .welcome h1{
   font-size:38px;
-  margin-bottom:10px;
 }
 
-.welcome h1 span{
+.welcome span{
   color:#60a5fa;
 }
 
@@ -213,48 +120,88 @@ body{
   color:#94a3b8;
 }
 
-.suggestions{
+.row{
   display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  justify-content:center;
-  margin-top:25px;
+  margin-bottom:16px;
 }
 
-.suggestion{
+.row.user{
+  justify-content:flex-end;
+}
+
+.bubble{
+  max-width:82%;
+  padding:14px 17px;
+  border-radius:18px;
+  line-height:1.55;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+
+.row.ai .bubble{
+  background:#1f2937;
+}
+
+.row.user .bubble{
+  background:#2563eb;
+}
+
+.actions{
+  display:flex;
+  gap:6px;
+  margin-top:8px;
+}
+
+.action{
+  border:0;
   background:#172033;
-  border:1px solid #334155;
-  color:#dbeafe;
-  padding:11px 14px;
-  border-radius:12px;
+  color:#cbd5e1;
+  padding:6px 9px;
+  border-radius:8px;
   cursor:pointer;
 }
 
-.suggestion:hover{
-  background:#1e293b;
+.composer{
+  border-top:1px solid #263244;
+  padding:12px;
 }
 
-/* INPUT */
+.preview{
+  display:none;
+  max-width:900px;
+  margin:auto;
+  padding-bottom:8px;
+  align-items:center;
+  gap:10px;
+}
 
-.input-wrapper{
-  padding:15px 20px 18px;
-  border-top:1px solid #263244;
-  background:#111827;
+.preview img{
+  max-height:100px;
+  max-width:150px;
+  border-radius:10px;
+}
+
+.remove{
+  border:0;
+  background:#991b1b;
+  color:white;
+  padding:7px 10px;
+  border-radius:8px;
 }
 
 .input-area{
   max-width:900px;
   margin:auto;
   display:flex;
-  gap:10px;
+  gap:7px;
 }
 
 textarea{
   flex:1;
   height:54px;
   resize:none;
-  padding:16px;
-  border-radius:15px;
+  padding:15px;
+  border-radius:14px;
   border:1px solid #374151;
   background:#0b1220;
   color:white;
@@ -266,33 +213,31 @@ textarea:focus{
   border-color:#2563eb;
 }
 
+.tool-btn,
 .send{
-  width:80px;
   border:0;
-  border-radius:15px;
-  background:#2563eb;
+  border-radius:14px;
+  padding:0 13px;
+  background:#172033;
   color:white;
-  font-weight:bold;
   cursor:pointer;
+  font-weight:bold;
 }
 
-.send:hover{
-  background:#1d4ed8;
+.send{
+  background:#2563eb;
 }
 
 .send:disabled{
-  background:#374151;
-  cursor:not-allowed;
+  opacity:.5;
 }
 
-.disclaimer{
+.note{
   text-align:center;
   color:#64748b;
   font-size:11px;
-  margin-top:8px;
+  margin-top:7px;
 }
-
-/* MOBILE */
 
 @media(max-width:700px){
 
@@ -301,20 +246,16 @@ textarea:focus{
     left:-270px;
     top:0;
     bottom:0;
-    z-index:20;
-    transition:.25s;
+    z-index:10;
+    transition:.2s;
   }
 
   .sidebar.open{
     left:0;
   }
 
-  .mobile-menu{
+  .menu{
     display:block;
-  }
-
-  .header{
-    padding:0 12px;
   }
 
   .status{
@@ -322,27 +263,24 @@ textarea:focus{
   }
 
   .chat{
-    padding:20px 12px;
+    padding:15px 10px;
   }
 
-  .message{
-    max-width:90%;
-  }
-
-  .welcome{
-    margin:50px auto;
+  .bubble{
+    max-width:92%;
   }
 
   .welcome h1{
     font-size:30px;
   }
 
-  .input-wrapper{
-    padding:10px;
+  .input-area{
+    gap:4px;
   }
 
+  .tool-btn,
   .send{
-    width:65px;
+    padding:0 9px;
   }
 }
 </style>
@@ -352,218 +290,217 @@ textarea:focus{
 
 <div class="app">
 
-  <!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
 
-  <aside class="sidebar" id="sidebar">
+  <div class="logo">
+    ✦ <span>Avenqor</span> AI
+  </div>
 
-    <div class="brand">
-      ✦ <span>Avenqor</span> AI
-    </div>
+  <button class="new-chat" onclick="newChat()">
+    ＋ New Chat
+  </button>
 
-    <button class="new-chat" onclick="newChat()">
-      ＋ New Chat
+  <small>CHAT HISTORY</small>
+
+  <div class="history" id="history"></div>
+
+</aside>
+
+
+<main class="main">
+
+<header class="header">
+
+  <button class="menu" onclick="toggleSidebar()">
+    ☰
+  </button>
+
+  <b>
+    <span style="color:#60a5fa">Avenqor</span> AI
+  </b>
+
+  <div class="status">
+    ● Online
+  </div>
+
+</header>
+
+
+<section class="chat" id="chat">
+
+  <div class="welcome" id="welcome">
+
+    <h1>
+      Hello, I'm <span>Avenqor AI</span> 👋
+    </h1>
+
+    <p>
+      Your intelligent AI assistant powered by Google Gemini.
+    </p>
+
+  </div>
+
+</section>
+
+
+<div class="composer">
+
+  <div class="preview" id="preview">
+
+    <img id="previewImg">
+
+    <button class="remove" onclick="removeImage()">
+      Remove
     </button>
 
-    <div class="history-title">
-      CHAT HISTORY
-    </div>
-
-    <div class="history" id="history"></div>
-
-  </aside>
+  </div>
 
 
-  <!-- MAIN -->
+  <div class="input-area">
 
-  <main class="main">
+    <input
+      type="file"
+      id="file"
+      accept="image/*"
+      hidden
+      onchange="selectImage(event)"
+    >
 
-    <header class="header">
+    <button
+      class="tool-btn"
+      onclick="document.getElementById('file').click()"
+      title="Attach image"
+    >
+      📎
+    </button>
 
-      <button class="mobile-menu" onclick="toggleSidebar()">
-        ☰
-      </button>
+    <button
+      class="tool-btn"
+      onclick="startVoice()"
+      title="Voice input"
+    >
+      🎤
+    </button>
 
-      <div class="title">
-        <span>Avenqor</span> AI
-      </div>
+    <textarea
+      id="q"
+      placeholder="Message Avenqor AI..."
+      onkeydown="handleKey(event)"
+    ></textarea>
 
-      <div class="status">
-        ● Online
-      </div>
+    <button
+      class="send"
+      id="sendButton"
+      onclick="sendMessage()"
+    >
+      Send
+    </button>
 
-    </header>
+  </div>
 
+  <div class="note">
+    Avenqor AI • Created by Bilal • Powered by Google Gemini
+  </div>
 
-    <!-- CHAT -->
+</div>
 
-    <section class="chat" id="chat">
-
-      <div class="welcome" id="welcome">
-
-        <h1>
-          Hello, I'm <span>Avenqor AI</span> 👋
-        </h1>
-
-        <p>
-          Your intelligent AI assistant.
-        </p>
-
-        <div class="suggestions">
-
-          <button class="suggestion"
-            onclick="useSuggestion('Explain quantum physics simply')">
-            Explain something
-          </button>
-
-          <button class="suggestion"
-            onclick="useSuggestion('Help me write a program')">
-            Help with coding
-          </button>
-
-          <button class="suggestion"
-            onclick="useSuggestion('Help me study biology')">
-            Study with me
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- INPUT -->
-
-    <div class="input-wrapper">
-
-      <div class="input-area">
-
-        <textarea
-          id="q"
-          placeholder="Message Avenqor AI..."
-          onkeydown="handleKey(event)"
-        ></textarea>
-
-        <button
-          class="send"
-          id="sendButton"
-          onclick="sendMessage()"
-        >
-          Send
-        </button>
-
-      </div>
-
-      <div class="disclaimer">
-        Avenqor AI is powered by Google Gemini.
-      </div>
-
-    </div>
-
-  </main>
+</main>
 
 </div>
 
 
 <script>
 
-let messages = [];
-let currentChat = [];
+let selectedImage = null;
 
+let currentMessages = [];
 
-/* STORAGE */
-
-function saveChats(){
-
-  localStorage.setItem(
-    "avenqor_chats",
-    JSON.stringify(messages)
+let history =
+  JSON.parse(
+    localStorage.getItem("avenqor_history") || "[]"
   );
-
-}
-
-
-function loadChats(){
-
-  const saved =
-    localStorage.getItem("avenqor_chats");
-
-  if(saved){
-
-    try{
-      messages = JSON.parse(saved);
-    }catch{
-      messages = [];
-    }
-
-  }
-
-  renderHistory();
-
-}
 
 
 /* HISTORY */
 
+function saveHistory(){
+
+  localStorage.setItem(
+    "avenqor_history",
+    JSON.stringify(history)
+  );
+
+  renderHistory();
+}
+
+
 function renderHistory(){
 
-  const history =
+  const box =
     document.getElementById("history");
 
-  history.innerHTML = "";
+  box.innerHTML = "";
 
-  messages.forEach((chat,index)=>{
+  history.forEach((chat,index)=>{
 
     const item =
       document.createElement("div");
 
-    item.className = "history-item";
+    item.className =
+      "history-item";
 
     item.textContent =
-      chat.title || "New Chat";
+      chat.title;
 
-    item.onclick = () =>
-      loadChat(index);
+    item.onclick = () => {
 
-    history.appendChild(item);
+      currentMessages =
+        chat.messages || [];
+
+      renderMessages();
+
+      closeSidebar();
+
+    };
+
+    box.appendChild(item);
 
   });
 
 }
 
 
-function loadChat(index){
+/* RENDER */
 
-  currentChat =
-    messages[index].messages || [];
-
-  renderChat();
-
-  closeSidebar();
-
-}
-
-
-function renderChat(){
+function renderMessages(){
 
   const chat =
     document.getElementById("chat");
 
   chat.innerHTML = "";
 
-  if(currentChat.length === 0){
+  if(!currentMessages.length){
 
-    showWelcome();
+    chat.innerHTML = `
+      <div class="welcome">
+        <h1>
+          Hello, I'm <span>Avenqor AI</span> 👋
+        </h1>
+        <p>
+          Your intelligent AI assistant powered by Google Gemini.
+        </p>
+      </div>
+    `;
 
     return;
-
   }
 
-  currentChat.forEach(item=>{
 
-    addMessageToUI(
-      item.text,
-      item.type,
+  currentMessages.forEach(msg=>{
+
+    addMessage(
+      msg.text,
+      msg.type,
       false
     );
 
@@ -572,50 +509,13 @@ function renderChat(){
 }
 
 
-function showWelcome(){
-
-  const chat =
-    document.getElementById("chat");
-
-  chat.innerHTML = `
-    <div class="welcome" id="welcome">
-
-      <h1>
-        Hello, I'm <span>Avenqor AI</span> 👋
-      </h1>
-
-      <p>
-        Your intelligent AI assistant.
-      </p>
-
-      <div class="suggestions">
-
-        <button class="suggestion"
-          onclick="useSuggestion('Explain quantum physics simply')">
-          Explain something
-        </button>
-
-        <button class="suggestion"
-          onclick="useSuggestion('Help me write a program')">
-          Help with coding
-        </button>
-
-        <button class="suggestion"
-          onclick="useSuggestion('Help me study biology')">
-          Study with me
-        </button>
-
-      </div>
-
-    </div>
-  `;
-
-}
-
-
 /* ADD MESSAGE */
 
-function addMessageToUI(text,type,actions=true){
+function addMessage(
+  text,
+  type,
+  actions=true
+){
 
   const chat =
     document.getElementById("chat");
@@ -624,64 +524,153 @@ function addMessageToUI(text,type,actions=true){
     document.createElement("div");
 
   row.className =
-    "message-row " + type;
+    "row " + type;
 
-  const box =
+  const bubble =
     document.createElement("div");
 
-  box.className =
-    "message " + type;
+  bubble.className =
+    "bubble";
 
-  box.textContent = text;
+  bubble.textContent =
+    text;
 
-  row.appendChild(box);
+  row.appendChild(bubble);
 
   chat.appendChild(row);
 
+
   if(type === "ai" && actions){
 
-    const actionsDiv =
+    const actionsBox =
       document.createElement("div");
 
-    actionsDiv.className =
+    actionsBox.className =
       "actions";
+
 
     const copy =
       document.createElement("button");
 
     copy.className =
-      "action-btn";
+      "action";
 
     copy.textContent =
       "📋 Copy";
 
-    copy.onclick = () =>
-      copyText(text);
+    copy.onclick = () => {
 
-    const regenerate =
+      navigator.clipboard.writeText(text);
+
+    };
+
+
+    const speak =
       document.createElement("button");
 
-    regenerate.className =
-      "action-btn";
+    speak.className =
+      "action";
 
-    regenerate.textContent =
-      "🔄 Regenerate";
+    speak.textContent =
+      "🔊 Speak";
 
-    regenerate.onclick =
-      regenerateLast;
+    speak.onclick = () => {
 
-    actionsDiv.appendChild(copy);
+      speechSynthesis.cancel();
 
-    actionsDiv.appendChild(regenerate);
+      speechSynthesis.speak(
+        new SpeechSynthesisUtterance(text)
+      );
 
-    box.appendChild(actionsDiv);
+    };
+
+
+    actionsBox.appendChild(copy);
+
+    actionsBox.appendChild(speak);
+
+    bubble.appendChild(actionsBox);
 
   }
+
 
   chat.scrollTop =
     chat.scrollHeight;
 
-  return box;
+  return row;
+}
+
+
+/* IMAGE */
+
+function selectImage(event){
+
+  const file =
+    event.target.files[0];
+
+  if(!file){
+    return;
+  }
+
+  if(!file.type.startsWith("image/")){
+
+    alert("Please select an image.");
+
+    return;
+
+  }
+
+
+  const reader =
+    new FileReader();
+
+  reader.onload = () => {
+
+    selectedImage = {
+
+      data:
+        reader.result.split(",")[1],
+
+      mimeType:
+        file.type,
+
+      preview:
+        reader.result
+
+    };
+
+
+    document.getElementById(
+      "previewImg"
+    ).src =
+      reader.result;
+
+
+    document.getElementById(
+      "preview"
+    ).style.display =
+      "flex";
+
+  };
+
+
+  reader.readAsDataURL(file);
+
+}
+
+
+function removeImage(){
+
+  selectedImage = null;
+
+  document.getElementById(
+    "file"
+  ).value = "";
+
+  document.getElementById(
+    "preview"
+  ).style.display =
+    "none";
 
 }
 
@@ -699,9 +688,20 @@ async function sendMessage(){
   const text =
     input.value.trim();
 
-  if(!text){
+
+  if(!text && !selectedImage){
     return;
   }
+
+
+  const image =
+    selectedImage;
+
+
+  const messageText =
+    text ||
+    "Please analyze this image.";
+
 
   const welcome =
     document.getElementById("welcome");
@@ -710,16 +710,22 @@ async function sendMessage(){
     welcome.remove();
   }
 
-  addMessageToUI(
-    text,
+
+  addMessage(
+    messageText,
     "user",
     false
   );
 
-  currentChat.push({
-    text:text,
+
+  currentMessages.push({
+
+    text:messageText,
+
     type:"user"
+
   });
+
 
   input.value = "";
 
@@ -729,7 +735,7 @@ async function sendMessage(){
 
 
   const thinking =
-    addMessageToUI(
+    addMessage(
       "Avenqor AI is thinking... 🤔",
       "ai",
       false
@@ -739,111 +745,150 @@ async function sendMessage(){
   try{
 
     const response =
-      await fetch("/api/chat",{
+      await fetch(
+        "/api/chat",
+        {
 
-        method:"POST",
+          method:"POST",
 
-        headers:{
-          "Content-Type":"application/json"
-        },
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
 
-        body:JSON.stringify({
-          message:text
-        })
+          body:
+            JSON.stringify({
 
-      });
+              message:
+                text,
+
+              image:
+                image
+                  ? image.data
+                  : null,
+
+              mimeType:
+                image
+                  ? image.mimeType
+                  : null
+
+            })
+
+        }
+      );
 
 
     const data =
       await response.json();
 
 
-    thinking.parentElement.remove();
+    thinking.remove();
 
 
-    if(data.reply){
+    if(!response.ok){
 
-      addMessageToUI(
-        data.reply,
-        "ai",
-        true
-      );
-
-      currentChat.push({
-        text:data.reply,
-        type:"ai"
-      });
-
-      saveCurrentChat();
-
-    }else{
-
-      addMessageToUI(
-        "Error: " +
-        (data.error || "Unknown error"),
-        "ai",
-        false
+      throw new Error(
+        data.error ||
+        "Request failed"
       );
 
     }
 
+
+    if(!data.reply){
+
+      throw new Error(
+        "Empty response"
+      );
+
+    }
+
+
+    addMessage(
+      data.reply,
+      "ai",
+      true
+    );
+
+
+    currentMessages.push({
+
+      text:data.reply,
+
+      type:"ai"
+
+    });
+
+
+    saveCurrentChat();
+
+    removeImage();
+
+
   }catch(error){
 
-    thinking.parentElement.remove();
+    thinking.remove();
 
-    addMessageToUI(
-      "Connection error. Please try again. ❌",
+    addMessage(
+      "Error: " +
+      error.message,
       "ai",
       false
     );
-
-    console.error(error);
 
   }
 
 
   button.disabled = false;
 
-  button.textContent = "Send";
+  button.textContent =
+    "Send";
 
 }
 
 
-/* SAVE CURRENT CHAT */
+/* SAVE */
 
 function saveCurrentChat(){
 
-  if(currentChat.length === 0){
+  if(!currentMessages.length){
     return;
   }
 
-  const firstUser =
-    currentChat.find(x=>x.type==="user");
 
-  const title =
-    firstUser
-      ? firstUser.text.slice(0,35)
-      : "New Chat";
-
-
-  const existing =
-    messages.findIndex(
-      x => x.messages === currentChat
+  const first =
+    currentMessages.find(
+      m => m.type === "user"
     );
 
 
-  if(existing === -1){
+  const title =
+    first
+      ? first.text.slice(0,40)
+      : "New Chat";
 
-    messages.unshift({
-      title:title,
-      messages:currentChat
-    });
+
+  history.unshift({
+
+    title:title,
+
+    messages:
+      currentMessages
+
+  });
+
+
+  /* avoid too many duplicates */
+
+  if(history.length > 20){
+
+    history =
+      history.slice(0,20);
 
   }
 
-  saveChats();
 
-  renderHistory();
+  saveHistory();
 
 }
 
@@ -852,69 +897,73 @@ function saveCurrentChat(){
 
 function newChat(){
 
-  currentChat = [];
+  currentMessages = [];
 
-  showWelcome();
+  removeImage();
 
-  document.getElementById("q").value = "";
+  document.getElementById(
+    "q"
+  ).value = "";
 
-  closeSidebar();
+  renderMessages();
 
 }
 
 
-/* REGENERATE */
+/* VOICE INPUT */
 
-async function regenerateLast(){
+function startVoice(){
 
-  if(currentChat.length < 2){
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+  if(!SpeechRecognition){
+
+    alert(
+      "Voice input is not supported in this browser."
+    );
+
     return;
-  }
-
-  const lastUser =
-    [...currentChat]
-      .reverse()
-      .find(x=>x.type==="user");
-
-  if(!lastUser){
-    return;
-  }
-
-  document.getElementById("q").value =
-    lastUser.text;
-
-  await sendMessage();
-
-}
-
-
-/* COPY */
-
-async function copyText(text){
-
-  try{
-
-    await navigator.clipboard.writeText(text);
-
-    alert("Copied!");
-
-  }catch{
-
-    alert("Copy failed");
 
   }
 
-}
+
+  const recognition =
+    new SpeechRecognition();
 
 
-/* SUGGESTION */
+  recognition.lang =
+    "en-US";
 
-function useSuggestion(text){
 
-  document.getElementById("q").value =
-    text;
+  recognition.interimResults =
+    false;
 
-  sendMessage();
+
+  recognition.onresult =
+    function(event){
+
+      document.getElementById(
+        "q"
+      ).value =
+        event.results[0][0].transcript;
+
+    };
+
+
+  recognition.onerror =
+    function(){
+
+      alert(
+        "Voice input failed."
+      );
+
+    };
+
+
+  recognition.start();
 
 }
 
@@ -937,7 +986,7 @@ function handleKey(event){
 }
 
 
-/* SIDEBAR */
+/* MOBILE */
 
 function toggleSidebar(){
 
@@ -959,7 +1008,9 @@ function closeSidebar(){
 
 /* START */
 
-loadChats();
+renderHistory();
+
+renderMessages();
 
 </script>
 
