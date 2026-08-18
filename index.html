@@ -3,16 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Avenqor AI</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
   height:100vh;
   background:#0b1020;
-  color:white;
+  color:#fff;
   font-family:Arial,sans-serif;
 }
 
@@ -374,19 +377,23 @@ textarea:focus{
       📎
     </button>
 
+
     <button
       class="tool-btn"
-      onclick="startVoice()"
-      title="Voice input"
+      id="voiceButton"
+      onclick="toggleVoice()"
+      title="Voice"
     >
       🎤
     </button>
+
 
     <textarea
       id="q"
       placeholder="Message Avenqor AI..."
       onkeydown="handleKey(event)"
     ></textarea>
+
 
     <button
       class="send"
@@ -421,7 +428,22 @@ let history =
   );
 
 
-/* HISTORY */
+/* =========================
+   VOICE VARIABLES
+========================= */
+
+let mediaRecorder = null;
+
+let audioChunks = [];
+
+let audioStream = null;
+
+let isRecording = false;
+
+
+/* =========================
+   HISTORY
+========================= */
 
 function saveHistory(){
 
@@ -470,7 +492,9 @@ function renderHistory(){
 }
 
 
-/* RENDER */
+/* =========================
+   RENDER MESSAGES
+========================= */
 
 function renderMessages(){
 
@@ -486,6 +510,7 @@ function renderMessages(){
         <h1>
           Hello, I'm <span>Avenqor AI</span> 👋
         </h1>
+
         <p>
           Your intelligent AI assistant powered by Google Gemini.
         </p>
@@ -509,7 +534,9 @@ function renderMessages(){
 }
 
 
-/* ADD MESSAGE */
+/* =========================
+   ADD MESSAGE
+========================= */
 
 function addMessage(
   text,
@@ -578,9 +605,13 @@ function addMessage(
 
       speechSynthesis.cancel();
 
-      speechSynthesis.speak(
-        new SpeechSynthesisUtterance(text)
-      );
+      const speech =
+        new SpeechSynthesisUtterance(text);
+
+      speech.lang =
+        "en-US";
+
+      speechSynthesis.speak(speech);
 
     };
 
@@ -601,7 +632,9 @@ function addMessage(
 }
 
 
-/* IMAGE */
+/* =========================
+   IMAGE
+========================= */
 
 function selectImage(event){
 
@@ -623,6 +656,7 @@ function selectImage(event){
 
   const reader =
     new FileReader();
+
 
   reader.onload = () => {
 
@@ -675,7 +709,9 @@ function removeImage(){
 }
 
 
-/* SEND */
+/* =========================
+   SEND MESSAGE
+========================= */
 
 async function sendMessage(){
 
@@ -847,7 +883,313 @@ async function sendMessage(){
 }
 
 
-/* SAVE */
+/* =========================
+   VOICE
+========================= */
+
+async function toggleVoice(){
+
+  if(isRecording){
+
+    stopVoice();
+
+  }else{
+
+    startVoice();
+
+  }
+
+}
+
+
+async function startVoice(){
+
+  try{
+
+    if(
+      !navigator.mediaDevices ||
+      !navigator.mediaDevices.getUserMedia
+    ){
+
+      alert(
+        "Your browser does not support microphone recording."
+      );
+
+      return;
+
+    }
+
+
+    audioStream =
+      await navigator.mediaDevices.getUserMedia({
+        audio:true
+      });
+
+
+    audioChunks = [];
+
+
+    let mimeType =
+      "audio/webm";
+
+
+    if(
+      !MediaRecorder.isTypeSupported(
+        "audio/webm"
+      )
+    ){
+
+      mimeType =
+        "audio/mp4";
+
+    }
+
+
+    mediaRecorder =
+      new MediaRecorder(
+        audioStream,
+        {
+          mimeType:mimeType
+        }
+      );
+
+
+    mediaRecorder.ondataavailable =
+      function(event){
+
+        if(event.data.size > 0){
+
+          audioChunks.push(
+            event.data
+          );
+
+        }
+
+      };
+
+
+    mediaRecorder.onstop =
+      async function(){
+
+        const blob =
+          new Blob(
+            audioChunks,
+            {
+              type:mimeType
+            }
+          );
+
+
+        audioStream
+          .getTracks()
+          .forEach(
+            track => track.stop()
+          );
+
+
+        const reader =
+          new FileReader();
+
+
+        reader.onloadend =
+          async function(){
+
+            const base64 =
+              reader.result.split(",")[1];
+
+
+            await sendVoiceToAI(
+              base64,
+              mimeType
+            );
+
+          };
+
+
+        reader.readAsDataURL(blob);
+
+      };
+
+
+    mediaRecorder.start();
+
+    isRecording = true;
+
+
+    const button =
+      document.getElementById(
+        "voiceButton"
+      );
+
+
+    button.textContent =
+      "⏹️";
+
+
+    button.style.background =
+      "#991b1b";
+
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Microphone permission was denied or recording failed."
+    );
+
+  }
+
+}
+
+
+function stopVoice(){
+
+  if(
+    mediaRecorder &&
+    isRecording
+  ){
+
+    mediaRecorder.stop();
+
+    isRecording = false;
+
+
+    const button =
+      document.getElementById(
+        "voiceButton"
+      );
+
+
+    button.textContent =
+      "🎤";
+
+
+    button.style.background =
+      "";
+
+  }
+
+}
+
+
+/* =========================
+   SEND AUDIO TO GEMINI
+========================= */
+
+async function sendVoiceToAI(
+  audioBase64,
+  audioMimeType
+){
+
+  const thinking =
+    addMessage(
+      "Avenqor AI is listening... 🎤",
+      "ai",
+      false
+    );
+
+
+  try{
+
+    const response =
+      await fetch(
+        "/api/chat",
+        {
+
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+
+              message:
+                "Listen to the user's audio and answer their request.",
+
+              audio:
+                audioBase64,
+
+              audioMimeType:
+                audioMimeType
+
+            })
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    thinking.remove();
+
+
+    if(!response.ok){
+
+      throw new Error(
+        data.error ||
+        "Voice request failed"
+      );
+
+    }
+
+
+    if(!data.reply){
+
+      throw new Error(
+        "Empty voice response"
+      );
+
+    }
+
+
+    addMessage(
+      data.reply,
+      "ai",
+      true
+    );
+
+
+    currentMessages.push({
+
+      text:data.reply,
+
+      type:"ai"
+
+    });
+
+
+    saveCurrentChat();
+
+
+  }catch(error){
+
+    thinking.remove();
+
+
+    addMessage(
+      "Voice error: " +
+      error.message,
+      "ai",
+      false
+    );
+
+
+    console.error(error);
+
+  }
+
+}
+
+
+/* =========================
+   SAVE CURRENT CHAT
+========================= */
 
 function saveCurrentChat(){
 
@@ -878,8 +1220,6 @@ function saveCurrentChat(){
   });
 
 
-  /* avoid too many duplicates */
-
   if(history.length > 20){
 
     history =
@@ -893,7 +1233,9 @@ function saveCurrentChat(){
 }
 
 
-/* NEW CHAT */
+/* =========================
+   NEW CHAT
+========================= */
 
 function newChat(){
 
@@ -910,65 +1252,9 @@ function newChat(){
 }
 
 
-/* VOICE INPUT */
-
-function startVoice(){
-
-  const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
-
-
-  if(!SpeechRecognition){
-
-    alert(
-      "Voice input is not supported in this browser."
-    );
-
-    return;
-
-  }
-
-
-  const recognition =
-    new SpeechRecognition();
-
-
-  recognition.lang =
-    "en-US";
-
-
-  recognition.interimResults =
-    false;
-
-
-  recognition.onresult =
-    function(event){
-
-      document.getElementById(
-        "q"
-      ).value =
-        event.results[0][0].transcript;
-
-    };
-
-
-  recognition.onerror =
-    function(){
-
-      alert(
-        "Voice input failed."
-      );
-
-    };
-
-
-  recognition.start();
-
-}
-
-
-/* ENTER */
+/* =========================
+   ENTER
+========================= */
 
 function handleKey(event){
 
@@ -986,7 +1272,9 @@ function handleKey(event){
 }
 
 
-/* MOBILE */
+/* =========================
+   MOBILE SIDEBAR
+========================= */
 
 function toggleSidebar(){
 
@@ -1006,7 +1294,9 @@ function closeSidebar(){
 }
 
 
-/* START */
+/* =========================
+   START
+========================= */
 
 renderHistory();
 
