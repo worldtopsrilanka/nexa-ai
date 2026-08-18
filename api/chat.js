@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // Only allow POST requests
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "Method not allowed"
@@ -7,16 +6,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message } = req.body || {};
+    const { message, image, mimeType } = req.body || {};
 
-    // Check message
-    if (!message || !message.trim()) {
+    if ((!message || !message.trim()) && !image) {
       return res.status(400).json({
-        error: "Message is required"
+        error: "Message or image is required"
       });
     }
 
-    // Get Gemini API key from Vercel
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
@@ -25,61 +22,66 @@ export default async function handler(req, res) {
       });
     }
 
-    // Avenqor AI personality / identity
-    const prompt = `
-You are Avenqor AI, an AI assistant created by Bilal.
+    const input = [];
+
+    input.push({
+      type: "text",
+      text: `
+You are Avenqor AI, an AI assistant created and owned by Bilal.
 
 Your name is Avenqor AI.
+You are powered by Google Gemini.
 
-Important identity rules:
-- If someone asks "Who are you?", say that you are Avenqor AI.
-- If someone asks who created you, say that you were created by Bilal.
-- If someone asks who owns Avenqor AI, say that Bilal is the creator and owner of Avenqor AI.
-- You are powered by Google Gemini.
-- Never claim that Google created Avenqor AI.
-- Google Gemini is only the AI technology powering Avenqor AI.
-- Be helpful, friendly, accurate and concise.
-- You can answer questions, explain lessons, help with coding, writing, mathematics, science and general topics.
-- If the user speaks Sinhala, reply in Sinhala unless they ask for another language.
+If asked who you are, say you are Avenqor AI.
+If asked who created or owns you, say Bilal.
+Never say Google created Avenqor AI.
+
+You can help with questions, education, coding,
+mathematics, science, writing and image understanding.
+
+If the user speaks Sinhala, reply in Sinhala unless
+they request another language.
 
 User message:
-${message}
-`;
+${message || "Please analyze the uploaded image."}
+`
+    });
 
-    // Gemini Interactions API
+    if (image) {
+      input.push({
+        type: "image",
+        data: image,
+        mime_type: mimeType || "image/jpeg"
+      });
+    }
+
     const response = await fetch(
       "https://generativelanguage.googleapis.com/v1beta/interactions",
       {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
           "x-goog-api-key": apiKey
         },
-
         body: JSON.stringify({
           model: "gemini-3.6-flash",
-          input: prompt
+          input: input
         })
       }
     );
 
     const data = await response.json();
 
-    // Gemini API error
     if (!response.ok) {
       return res.status(response.status).json({
         error:
           data?.error?.message ||
-          "Gemini API error",
-        debug: data
+          "Gemini API error"
       });
     }
 
-    // Get AI response
     let reply = data?.output_text;
 
-    // Backup response extraction
     if (!reply && Array.isArray(data?.steps)) {
       reply = data.steps
         .flatMap(step => step?.content || [])
@@ -88,20 +90,18 @@ ${message}
         .join("\n");
     }
 
-    // Empty response
     if (!reply) {
       return res.status(500).json({
-        error: "Avenqor AI returned an empty response",
-        debug: data
+        error: "Avenqor AI returned an empty response"
       });
     }
 
-    // Send response to website
     return res.status(200).json({
       reply: reply.trim()
     });
 
   } catch (error) {
+
     console.error("Avenqor AI Error:", error);
 
     return res.status(500).json({
